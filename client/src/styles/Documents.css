@@ -1,0 +1,42 @@
+.documents-page {
+
+    padding: 40px;
+
+    background-color: #f2f2f2;
+
+    min-height: 100vh;
+}
+
+.documents-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    margin-top: 30px;
+}
+
+.document-card {
+
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 10px;
+}
+
+.document-card button {
+
+    margin-top: 15px;
+
+    padding: 10px 20px;
+
+    background-color: black;
+
+    color: white;
+
+    border: none;
+}

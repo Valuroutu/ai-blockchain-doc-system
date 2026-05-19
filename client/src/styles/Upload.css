@@ -1,0 +1,61 @@
+.upload-page {
+
+    height: 90vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #f2f2f2;
+}
+
+.upload-box {
+
+    width: 400px;
+
+    background-color: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+}
+
+.upload-box h2 {
+
+    margin-bottom: 20px;
+}
+
+.upload-box input,
+.upload-box select,
+.upload-box textarea {
+
+    width: 100%;
+
+    margin-bottom: 15px;
+
+    padding: 12px;
+
+    font-size: 16px;
+}
+
+.upload-box button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    background-color: black;
+    color: white;
+
+    border: none;
+
+    cursor: pointer;
+}
+.status-text {
+
+    margin-top: 20px;
+
+    text-align: center;
+
+    color: green;
+}
