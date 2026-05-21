@@ -1,160 +1,173 @@
-# AI + Blockchain Document Storage System
+# 🔐 AI + Blockchain Document Storage System
 
-## Overview
+A secure AI-powered decentralized document verification and storage platform built using the MERN stack, FastAPI, Blockchain, and IPFS.
 
-AI + Blockchain Document Storage System is a secure decentralized application (DApp) designed to verify, manage, and securely store important documents using Artificial Intelligence, Blockchain, IPFS, and MERN stack technologies.
-
-The system validates uploaded documents using an AI verification layer before allowing them to be securely stored in decentralized storage.
+This system verifies uploaded documents using an AI verification layer before securely storing them on decentralized storage (IPFS). The platform is designed to improve document authenticity, transparency, and security using Web3 technologies.
 
 ---
 
-# Current Project Status
+## 🚀 Features
 
-## Completed Features
+### ✅ Frontend (React + Vite)
 
-### Frontend (React)
-
-* React frontend setup using Vite
-* Multi-page routing using React Router
-* Responsive navigation bar
-* Upload document page
-* Documents dashboard page
-* Wallet connection UI
-* Modern CSS styling
-
-### Backend (Node.js + Express)
-
-* Express server setup
-* REST API integration
-* File upload handling using Multer
-* CORS configuration
-* Environment variable support using dotenv
-
-### AI Service (FastAPI)
-
-* FastAPI AI microservice
-* File type validation
-* File size validation
-* Suspicious filename detection
-* AI approval/rejection response system
-
-### MongoDB Integration
-
-* MongoDB Atlas integration
-* Metadata storage for uploaded documents
-* Mongoose schema creation
-* Database connection handling
-
-### Web3 Integration
-
-* MetaMask wallet connection
-* Ethers.js integration
-* Smart contract setup using Foundry
-* Local blockchain testing using Anvil
+- Modern React frontend using Vite
+- Multi-page routing with React Router DOM
+- Responsive UI design
+- Upload document interface
+- Document dashboard page
+- MetaMask wallet connection UI
 
 ---
 
-# Current Architecture
+### ✅ Backend (Node.js + Express)
+
+- REST API architecture
+- File upload handling using Multer
+- API route management
+- Environment variable support using dotenv
+- CORS configuration
+- Error handling middleware
+
+---
+
+### ✅ AI Verification Service (FastAPI)
+
+- AI-based document verification microservice
+- File type validation
+- File size validation
+- Suspicious filename detection
+- Approval / rejection response system
+- FastAPI + Uvicorn integration
+
+---
+
+### ✅ MongoDB Integration
+
+- MongoDB Atlas integration
+- Document metadata storage
+- Mongoose schema models
+- Upload history tracking
+
+Stored Metadata:
+- Document Name
+- Document Type
+- Wallet Address
+- AI Verification Status
+- IPFS CID
+- Upload Timestamp
+
+---
+
+### ✅ IPFS Integration
+
+- IPFS decentralized storage
+- Pinata integration
+- CID generation
+- Public gateway support
+
+---
+
+### ✅ Blockchain & Web3
+
+- MetaMask wallet integration
+- Ethers.js integration
+- Solidity smart contract setup
+- Foundry development environment
+- Local blockchain testing using Anvil
+
+---
+
+# 🏗️ System Architecture
 
 ```text
-Frontend (React)
-        ↓
-Backend (Express)
-        ↓
-AI Verification (FastAPI)
-        ↓
-MongoDB Storage
+Frontend (React + Vite)
+          ↓
+Backend API (Express.js)
+          ↓
+AI Verification Service (FastAPI)
+          ↓
+IPFS Storage (Pinata)
+          ↓
+MongoDB Atlas
 ```
 
 ---
 
-# Technologies Used
+# ⚙️ Tech Stack
 
 ## Frontend
-
-* React.js
-* React Router DOM
-* Axios
-* CSS
-* Vite
+- React.js
+- Vite
+- React Router DOM
+- Axios
+- CSS
 
 ## Backend
-
-* Node.js
-* Express.js
-* Multer
-* Mongoose
-* Dotenv
-* CORS
+- Node.js
+- Express.js
+- Multer
+- Mongoose
+- Axios
+- FormData
+- Dotenv
+- CORS
 
 ## AI Service
-
-* Python
-* FastAPI
-* Uvicorn
+- Python
+- FastAPI
+- Uvicorn
 
 ## Blockchain
-
-* Solidity
-* Foundry
-* Anvil
-* Ethers.js
-* MetaMask
+- Solidity
+- Foundry
+- Anvil
+- Ethers.js
+- MetaMask
 
 ## Database
+- MongoDB Atlas
 
-* MongoDB Atlas
+## Decentralized Storage
+- IPFS
+- Pinata
 
 ---
 
-# Project Workflow
+# 🔄 Project Workflow
 
 ```text
 User Uploads Document
-        ↓
+          ↓
 Backend Receives File
-        ↓
+          ↓
 AI Verification
-        ↓
-Approval / Rejection
-        ↓
+          ↓
+Approved / Rejected
+          ↓
+Upload to IPFS (Pinata)
+          ↓
 Metadata Stored in MongoDB
 ```
 
 ---
 
-# Planned Features
-
-## Upcoming Features
-
-* File encryption layer
-* IPFS decentralized storage
-* Blockchain CID storage
-* Sepolia Ethereum deployment
-* AI-based certificate validation
-* OCR integration
-* Fraud detection system
-* Access control system
-* Dashboard improvements
-
----
-
-# Folder Structure
+# 📂 Project Structure
 
 ```text
 ai-blockchain-doc-system/
 │
-├── client/
-├── server/
-├── contract/
-└── ai-service/
+├── client/          # React Frontend
+├── server/          # Express Backend
+├── ai-service/      # FastAPI AI Service
+├── contract/        # Solidity Smart Contracts
+└── README.md
 ```
 
 ---
 
-# Installation
+# 🛠️ Installation & Setup
 
-## Clone Repository
+## 1️⃣ Clone Repository
 
 ```bash
 git clone YOUR_REPOSITORY_URL
@@ -162,7 +175,7 @@ git clone YOUR_REPOSITORY_URL
 
 ---
 
-# Frontend Setup
+# 💻 Frontend Setup
 
 ```bash
 cd client
@@ -170,9 +183,15 @@ npm install
 npm run dev
 ```
 
+Frontend runs on:
+
+```text
+http://localhost:5173
+```
+
 ---
 
-# Backend Setup
+# ⚡ Backend Setup
 
 ```bash
 cd server
@@ -180,38 +199,130 @@ npm install
 npm run dev
 ```
 
----
+Backend runs on:
 
-# AI Service Setup
-
-```bash
-cd ai-service
-pip install fastapi uvicorn python-multipart
-python -m uvicorn main:app --reload
+```text
+http://localhost:5000
 ```
 
 ---
 
-# Smart Contract Setup
+# 🤖 AI Service Setup
+
+```bash
+cd ai-service
+
+pip install fastapi uvicorn python-multipart
+
+python -m uvicorn main:app --reload --port 8000
+```
+
+AI service runs on:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# ⛓️ Smart Contract Setup
 
 ```bash
 cd contract
+
 forge build
+
 anvil
 ```
 
 ---
 
-# Environment Variables
+# 🧪 API Testing (Postman)
 
-Create `.env` inside the `server` folder.
+## Upload Endpoint
+
+```http
+POST http://localhost:5000/api/documents
+```
+
+---
+
+## Request Body → form-data
+
+| KEY | TYPE |
+|------|------|
+| file | File |
+| documentName | Text |
+| documentType | Text |
+| walletAddress | Text |
+
+---
+
+# 📌 Sample API Response
+
+```json
+{
+  "success": true,
+  "aiStatus": "approved",
+  "pinataCID": "QmX123456789",
+  "pinataURL": "https://gateway.pinata.cloud/ipfs/QmX123456789"
+}
+```
+
+---
+
+# 🔐 Environment Variables
+
+Create a `.env` file inside the `server` folder.
 
 ```env
 MONGO_URI=YOUR_MONGODB_URI
+
+PINATA_JWT=YOUR_PINATA_JWT
 ```
 
--
+---
 
-# Future Goal
+# ✅ Current Working Features
 
-Build a secure AI-powered decentralized document verification and storage platform using blockchain and Web3 technologies.
+- AI document verification
+- Decentralized IPFS storage
+- MongoDB metadata storage
+- File upload API
+- REST API architecture
+- Multi-service backend communication
+- Wallet connection UI
+
+---
+
+# 🚧 Upcoming Features
+
+- Blockchain CID storage
+- Sepolia Ethereum deployment
+- OCR-based document extraction
+- AI certificate validation
+- Fraud detection system
+- JWT authentication
+- Role-based access control
+- File encryption layer
+- Smart contract integration
+- Admin dashboard
+- Ownership verification
+
+---
+
+# 🎯 Future Goal
+
+To build a secure AI-powered decentralized document verification and storage platform using Blockchain, AI, IPFS, and Web3 technologies.
+
+---
+
+# 👨‍💻 Author
+
+**Santosh Kumar Valuroutu**
+
+---
+
+# 📄 License
+
+This project is developed for educational and research purposes.
