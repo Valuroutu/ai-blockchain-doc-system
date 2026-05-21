@@ -1,13 +1,13 @@
 import express from "express";
 
-import cors from "cors";
+import mongoose from "mongoose";
 
 import dotenv from "dotenv";
 
-import mongoose from "mongoose";
+import cors from "cors";
 
-import uploadRoute
-from "./routes/upload.js";
+import documentRoutes
+from "./routes/documentRoutes.js";
 
 dotenv.config();
 
@@ -17,35 +17,21 @@ app.use(cors());
 
 app.use(express.json());
 
-mongoose.connect(
-    process.env.MONGO_URI
-)
-.then(() => {
+// ROUTES
+app.use(
+    "/api/documents",
+    documentRoutes
+);
 
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
     console.log(
       "MongoDB Connected"
     );
-
-})
-.catch((error) => {
-
-    console.log(error);
 });
 
-app.use("/upload", uploadRoute);
-
-app.get("/", (req, res) => {
-
-    res.send(
-      "Backend Running"
-    );
-});
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-
+app.listen(5000, () => {
     console.log(
-      `Server running on ${PORT}`
+      "Server running on port 5000"
     );
 });

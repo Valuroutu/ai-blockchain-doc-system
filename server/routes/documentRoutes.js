@@ -6,17 +6,21 @@ import axios from "axios";
 
 import FormData from "form-data";
 
-import Document
-from "../models/Document.js";
+import fs from "fs";
+
+import Document from "../models/Document.js";
+
+import { uploadToPinata }
+from "../services/pinataService.js";
 
 const router = express.Router();
 
 const upload = multer({
-    storage:
-      multer.memoryStorage()
+    dest: "uploads/",
 });
 
 router.post(
+
     "/",
 
     upload.single("file"),
@@ -31,13 +35,17 @@ router.post(
                 walletAddress
             } = req.body;
 
+            // FILE PATH
+            const filePath =
+                req.file.path;
+
+            // AI VERIFY
             const formData =
                 new FormData();
 
             formData.append(
                 "file",
-                req.file.buffer,
-                req.file.originalname
+                fs.createReadStream(filePath)
             );
 
             const aiResponse =
@@ -53,20 +61,41 @@ router.post(
             const aiStatus =
                 aiResponse.data.status;
 
+            // PINATA UPLOAD
+            const pinataCID =
+                await uploadToPinata(
+                    filePath
+                );
+
+            // SAVE TO MONGODB
             const newDocument =
                 new Document({
 
                 documentName,
+
                 documentType,
+
                 walletAddress,
+
                 aiStatus,
+
+                pinataCID,
             });
 
             await newDocument.save();
 
+            // RESPONSE
             res.json({
+
                 success: true,
+
                 aiStatus,
+
+                pinataCID,
+
+                pinataURL:
+                `https://gateway.pinata.cloud/ipfs/${pinataCID}`,
+
                 document:
                   newDocument,
             });
@@ -76,8 +105,11 @@ router.post(
             console.log(error);
 
             res.status(500).json({
-                error:
-                  "Upload failed"
+
+                success: false,
+
+                message:
+                  error.message,
             });
         }
     }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const documentSchema =
-    new mongoose.Schema({
+const DocumentSchema =
+new mongoose.Schema({
 
     documentName: {
         type: String,
@@ -13,26 +13,28 @@ const documentSchema =
         required: true,
     },
 
-    aiStatus: {
-        type: String,
-        required: true,
-    },
-
     walletAddress: {
         type: String,
         required: true,
     },
 
-    createdAt: {
-        type: Date,
-        default: Date.now,
+    aiStatus: {
+        type: String,
     },
+
+    pinataCID: {
+        type: String,
+    },
+
+    nftCID: {
+        type: String,
+    },
+
+}, {
+    timestamps: true,
 });
 
-const Document =
-    mongoose.model(
-        "Document",
-        documentSchema
-    );
-
-export default Document;
+export default mongoose.model(
+    "Document",
+    DocumentSchema
+);
