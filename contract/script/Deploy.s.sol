@@ -6,12 +6,15 @@ import "../src/DocumentStorage.sol";
 
 contract Deploy is Script {
 
-    function run() external {
+    function run() external returns (DocumentStorage) {
 
         vm.startBroadcast();
 
-        new DocumentStorage();
+        DocumentStorage documentStorage =
+            new DocumentStorage();
 
         vm.stopBroadcast();
+
+        return documentStorage;
     }
 }

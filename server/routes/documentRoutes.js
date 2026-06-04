@@ -1,17 +1,16 @@
 import express from "express";
-
 import multer from "multer";
-
 import axios from "axios";
-
 import FormData from "form-data";
-
 import fs from "fs";
 
 import Document from "../models/Document.js";
 
 import { uploadToPinata }
 from "../services/pinataService.js";
+
+import { storeOnBlockchain }
+from "../services/blockchainService.js";
 
 const router = express.Router();
 
@@ -20,14 +19,22 @@ const upload = multer({
 });
 
 router.post(
-
     "/",
-
     upload.single("file"),
-
     async (req, res) => {
 
+        console.log("BODY =>", req.body);
+        console.log("FILE =>", req.file);
+
         try {
+
+            if (!req.file) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "No file uploaded"
+                });
+            }
 
             const {
                 documentName,
@@ -35,17 +42,29 @@ router.post(
                 walletAddress
             } = req.body;
 
-            // FILE PATH
+            if (
+                !documentName ||
+                !documentType ||
+                !walletAddress
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "documentName, documentType and walletAddress are required"
+                });
+            }
+
             const filePath =
                 req.file.path;
 
-            // AI VERIFY
+            // AI Verification
             const formData =
                 new FormData();
 
             formData.append(
                 "file",
-                fs.createReadStream(filePath)
+                fs.createReadStream(filePath),
+                req.file.originalname
             );
 
             const aiResponse =
@@ -54,63 +73,144 @@ router.post(
                     formData,
                     {
                         headers:
-                          formData.getHeaders(),
+                            formData.getHeaders(),
                     }
                 );
 
-            const aiStatus =
-                aiResponse.data.status;
+            const aiResult =
+                aiResponse.data;
 
-            // PINATA UPLOAD
+            console.log(
+                "AI RESPONSE =>",
+                aiResult
+            );
+
+            const aiStatus =
+                aiResult.status;
+
+            // Upload to Pinata
             const pinataCID =
                 await uploadToPinata(
                     filePath
                 );
 
-            // SAVE TO MONGODB
+            const pinataURL =
+                `https://gateway.pinata.cloud/ipfs/${pinataCID}`;
+
+            // Blockchain Storage
+            const blockchainResult =
+                await storeOnBlockchain(
+
+                    pinataCID,
+
+                    aiResult.documentType ||
+                    "Unknown",
+
+                    aiResult.ownerName ||
+                    "",
+
+                    aiStatus ===
+                    "approved"
+                );
+
+            // MongoDB Save
             const newDocument =
                 new Document({
 
-                documentName,
+                    documentName,
 
-                documentType,
+                    documentType,
 
-                walletAddress,
+                    walletAddress,
 
-                aiStatus,
+                    aiStatus,
 
-                pinataCID,
-            });
+                    pinataCID,
+
+                    pinataURL,
+
+                    confidence:
+                        aiResult.confidence || 0,
+
+                    fraudScore:
+                        aiResult.fraudScore || 0,
+
+                    summary:
+                        aiResult.summary || "",
+
+                    extractedText:
+                        aiResult.extractedText || "",
+
+                    detectedDocumentType:
+                        aiResult.documentType || "Unknown",
+
+                    ownerName:
+                        aiResult.ownerName || "",
+
+                    accountNumber:
+                        aiResult.accountNumber || "",
+
+                    ifsc:
+                        aiResult.ifsc || "",
+
+                    blockchainTxHash:
+                        blockchainResult.txHash,
+
+                    blockchainDocumentId:
+                        blockchainResult.documentId
+                });
 
             await newDocument.save();
 
-            // RESPONSE
-            res.json({
+            return res.json({
 
                 success: true,
+
+                aiResponse: aiResult,
 
                 aiStatus,
 
                 pinataCID,
 
-                pinataURL:
-                `https://gateway.pinata.cloud/ipfs/${pinataCID}`,
+                pinataURL,
+
+                blockchainTxHash:
+                    blockchainResult.txHash,
+
+                blockchainDocumentId:
+                    blockchainResult.documentId,
 
                 document:
-                  newDocument,
+                    newDocument
             });
 
         } catch (error) {
 
-            console.log(error);
+            console.error(
+                "ERROR =>",
+                error
+            );
 
-            res.status(500).json({
+            return res.status(500).json({
 
                 success: false,
 
                 message:
-                  error.message,
+                    error.message
             });
+
+        } finally {
+
+            if (
+                req.file &&
+                fs.existsSync(
+                    req.file.path
+                )
+            ) {
+                fs.unlinkSync(
+                    req.file.path
+                );
+            }
         }
     }
 );

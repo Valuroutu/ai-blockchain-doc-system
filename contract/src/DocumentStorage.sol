@@ -4,7 +4,11 @@ pragma solidity ^0.8.20;
 contract DocumentStorage {
 
     struct Document {
+        uint256 id;
         string cid;
+        string documentType;
+        string ownerName;
+        bool verified;
         address owner;
         uint256 timestamp;
     }
@@ -13,13 +17,42 @@ contract DocumentStorage {
 
     uint256 public documentCount;
 
-    function uploadDocument(string memory _cid) public {
+    event DocumentUploaded(
+        uint256 indexed id,
+        string cid,
+        string documentType,
+        string ownerName,
+        bool verified,
+        address owner,
+        uint256 timestamp
+    );
+
+    function uploadDocument(
+        string memory _cid,
+        string memory _documentType,
+        string memory _ownerName,
+        bool _verified
+    ) public {
 
         documents[documentCount] = Document({
+            id: documentCount,
             cid: _cid,
+            documentType: _documentType,
+            ownerName: _ownerName,
+            verified: _verified,
             owner: msg.sender,
             timestamp: block.timestamp
         });
+
+        emit DocumentUploaded(
+            documentCount,
+            _cid,
+            _documentType,
+            _ownerName,
+            _verified,
+            msg.sender,
+            block.timestamp
+        );
 
         documentCount++;
     }
@@ -28,7 +61,11 @@ contract DocumentStorage {
         public
         view
         returns (
+            uint256,
             string memory,
+            string memory,
+            string memory,
+            bool,
             address,
             uint256
         )
@@ -36,7 +73,11 @@ contract DocumentStorage {
         Document memory doc = documents[_id];
 
         return (
+            doc.id,
             doc.cid,
+            doc.documentType,
+            doc.ownerName,
+            doc.verified,
             doc.owner,
             doc.timestamp
         );

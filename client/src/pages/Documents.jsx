@@ -15,15 +15,53 @@ function Documents() {
                 <div className="document-card">
 
                     <h2>
-                        Blockchain Certificate
+                        SBI Passbook
                     </h2>
 
                     <p>
-                        CID: Qm123...
+                        Owner:
+                        VALUROUTU SANTOSH KUMAR
+                    </p>
+
+                    <p>
+                        Status:
+                        Approved
+                    </p>
+
+                    <p>
+                        CID:
+                        QmTc6s5...
                     </p>
 
                     <button>
-                        View
+                        View Details
+                    </button>
+
+                </div>
+
+                <div className="document-card">
+
+                    <h2>
+                        Aadhaar Card
+                    </h2>
+
+                    <p>
+                        Owner:
+                        Example User
+                    </p>
+
+                    <p>
+                        Status:
+                        Approved
+                    </p>
+
+                    <p>
+                        CID:
+                        QmABC123...
+                    </p>
+
+                    <button>
+                        View Details
                     </button>
 
                 </div>

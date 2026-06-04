@@ -1,22 +1,15 @@
 import { useState } from "react";
-
 import axios from "axios";
 
 import "../styles/Upload.css";
 
 function Upload() {
 
-    const [documentName,
-        setDocumentName] =
+    const [documentName, setDocumentName] =
         useState("");
 
-    const [documentType,
-        setDocumentType] =
-        useState("Certificate");
-
-    const [description,
-        setDescription] =
-        useState("");
+    const [documentType, setDocumentType] =
+        useState("Bank Passbook");
 
     const [file, setFile] =
         useState(null);
@@ -24,34 +17,20 @@ function Upload() {
     const [loading, setLoading] =
         useState(false);
 
-    const [status, setStatus] =
-        useState("");
+    const [result, setResult] =
+        useState(null);
 
     async function handleUpload() {
 
-        if (!documentName) {
+        if (!documentName)
+            return alert("Enter document name");
 
-            alert(
-              "Enter document name"
-            );
-
-            return;
-        }
-
-        if (!file) {
-
-            alert(
-              "Select file"
-            );
-
-            return;
-        }
+        if (!file)
+            return alert("Select file");
 
         try {
 
             setLoading(true);
-
-            setStatus("");
 
             const formData =
                 new FormData();
@@ -72,23 +51,18 @@ function Upload() {
             );
 
             formData.append(
-                "description",
-                description
-            );
-
-            formData.append(
                 "walletAddress",
                 "temporary-wallet"
             );
 
             const response =
                 await axios.post(
-                    "http://localhost:5000/upload",
+                    "http://localhost:5000/api/documents",
                     formData
                 );
 
-            setStatus(
-                response.data.aiStatus
+            setResult(
+                response.data
             );
 
         } catch (error) {
@@ -96,7 +70,7 @@ function Upload() {
             console.log(error);
 
             alert(
-              "Upload failed"
+                "Upload Failed"
             );
 
         } finally {
@@ -112,98 +86,155 @@ function Upload() {
             <div className="upload-box">
 
                 <h2>
-                    Upload Document
+                    AI Document Verification
                 </h2>
 
                 <input
                     type="text"
-
-                    placeholder=
-                    "Document Name"
-
+                    placeholder="Document Name"
                     value={documentName}
-
                     onChange={(e) =>
                         setDocumentName(
-                          e.target.value
+                            e.target.value
                         )
                     }
                 />
 
                 <select
-
                     value={documentType}
-
                     onChange={(e) =>
                         setDocumentType(
-                          e.target.value
+                            e.target.value
                         )
                     }
                 >
 
                     <option>
-                        Certificate
+                        Bank Passbook
                     </option>
 
                     <option>
-                        Resume
+                        Aadhaar Card
                     </option>
 
                     <option>
-                        Identity Card
+                        PAN Card
+                    </option>
+
+                    <option>
+                        Passport
                     </option>
 
                 </select>
 
-                <textarea
-
-                    placeholder=
-                    "Description"
-
-                    value={description}
-
-                    onChange={(e) =>
-                        setDescription(
-                          e.target.value
-                        )
-                    }
-                />
-
                 <input
                     type="file"
-
                     onChange={(e) =>
                         setFile(
-                          e.target.files[0]
+                            e.target.files[0]
                         )
                     }
                 />
 
-                <button
-                    onClick={handleUpload}
+                {file && (
 
+                    <p>
+                        Selected:
+                        {file.name}
+                    </p>
+
+                )}
+
+                <button
+                    onClick={
+                        handleUpload
+                    }
                     disabled={loading}
                 >
 
                     {
                         loading
-                        ? "Verifying..."
-                        : "Upload"
+                            ? "Processing..."
+                            : "Upload & Verify"
                     }
 
                 </button>
 
-                {
-                    status &&
-                    <h3 className="status-text">
-
-                        AI Status:
-                        {status}
-
-                    </h3>
-                }
-
             </div>
+
+            {result && (
+
+                <div className="result-box">
+
+                    <h2>
+                        Verification Result
+                    </h2>
+
+                    <p>
+                        <strong>Status:</strong>
+                        {" "}
+                        {result.aiStatus}
+                    </p>
+
+                    <p>
+                        <strong>Detected Type:</strong>
+                        {" "}
+                        {result.aiResponse.documentType}
+                    </p>
+
+                    <p>
+                        <strong>Owner Name:</strong>
+                        {" "}
+                        {result.aiResponse.ownerName}
+                    </p>
+
+                    <p>
+                        <strong>Account Number:</strong>
+                        {" "}
+                        {result.aiResponse.accountNumber}
+                    </p>
+
+                    <p>
+                        <strong>IFSC:</strong>
+                        {" "}
+                        {result.aiResponse.ifsc}
+                    </p>
+
+                    <p>
+                        <strong>Confidence:</strong>
+                        {" "}
+                        {result.aiResponse.confidence}%
+                    </p>
+
+                    <p>
+                        <strong>Fraud Score:</strong>
+                        {" "}
+                        {result.aiResponse.fraudScore}
+                    </p>
+
+                    <p>
+                        <strong>IPFS CID:</strong>
+                        {" "}
+                        {result.pinataCID}
+                    </p>
+
+                    {
+                        result.blockchainTxHash && (
+
+                            <p>
+                                <strong>
+                                    Blockchain Tx:
+                                </strong>
+                                {" "}
+                                {result.blockchainTxHash}
+                            </p>
+
+                        )
+                    }
+
+                </div>
+
+            )}
 
         </div>
     );

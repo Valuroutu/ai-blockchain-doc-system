@@ -3,13 +3,14 @@ import express from "express";
 import mongoose from "mongoose";
 
 import dotenv from "dotenv";
+dotenv.config();
 
 import cors from "cors";
 
 import documentRoutes
 from "./routes/documentRoutes.js";
 
-dotenv.config();
+
 
 const app = express();
 
