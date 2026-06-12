@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
     connectWallet
@@ -12,6 +11,25 @@ function Navbar() {
 
     const [wallet, setWallet] =
         useState("");
+
+    const adminWallet =
+        "YOUR_METAMASK_WALLET_ADDRESS";
+
+    useEffect(() => {
+
+        const savedWallet =
+            localStorage.getItem(
+                "walletAddress"
+            );
+
+        if (savedWallet) {
+
+            setWallet(
+                savedWallet
+            );
+        }
+
+    }, []);
 
     async function handleConnect() {
 
@@ -25,14 +43,21 @@ function Navbar() {
             const address =
                 await signer.getAddress();
 
-            setWallet(address);
+            localStorage.setItem(
+                "walletAddress",
+                address
+            );
+
+            setWallet(
+                address
+            );
 
         } catch (error) {
 
             console.log(error);
 
             alert(
-              "Wallet connection failed"
+                "Wallet connection failed"
             );
         }
     }
@@ -48,7 +73,7 @@ function Navbar() {
             <div className="nav-links">
 
                 <Link to="/">
-                    Home
+                    Dashboard
                 </Link>
 
                 <Link to="/upload">
@@ -56,8 +81,20 @@ function Navbar() {
                 </Link>
 
                 <Link to="/documents">
-                    Documents
+                    My Documents
                 </Link>
+
+                {
+                    wallet &&
+                    wallet.toLowerCase() ===
+                    adminWallet.toLowerCase() && (
+
+                        <Link to="/admin">
+                            Admin
+                        </Link>
+
+                    )
+                }
 
                 <button
                     className="wallet-btn"
@@ -66,7 +103,7 @@ function Navbar() {
 
                     {
                         wallet
-                        ? wallet.slice(0,6)
+                        ? wallet.slice(0, 6)
                           + "..."
                           + wallet.slice(-4)
                         : "Connect Wallet"

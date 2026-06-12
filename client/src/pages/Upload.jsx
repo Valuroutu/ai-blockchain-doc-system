@@ -5,164 +5,185 @@ import "../styles/Upload.css";
 
 function Upload() {
 
-    const [documentName, setDocumentName] =
-        useState("");
 
-    const [documentType, setDocumentType] =
-        useState("Bank Passbook");
+const [documentName, setDocumentName] =
+    useState("");
 
-    const [file, setFile] =
-        useState(null);
+const [documentType, setDocumentType] =
+    useState("Bank Passbook");
 
-    const [loading, setLoading] =
-        useState(false);
+const [file, setFile] =
+    useState(null);
 
-    const [result, setResult] =
-        useState(null);
+const [loading, setLoading] =
+    useState(false);
 
-    async function handleUpload() {
+const [result, setResult] =
+    useState(null);
 
-        if (!documentName)
-            return alert("Enter document name");
+async function handleUpload() {
 
-        if (!file)
-            return alert("Select file");
+    if (!documentName)
+        return alert(
+            "Enter document name"
+        );
 
-        try {
+    if (!file)
+        return alert(
+            "Select file"
+        );
 
-            setLoading(true);
+    const walletAddress =
+        localStorage.getItem(
+            "walletAddress"
+        );
 
-            const formData =
-                new FormData();
+    if (!walletAddress) {
 
-            formData.append(
-                "file",
-                file
-            );
-
-            formData.append(
-                "documentName",
-                documentName
-            );
-
-            formData.append(
-                "documentType",
-                documentType
-            );
-
-            formData.append(
-                "walletAddress",
-                "temporary-wallet"
-            );
-
-            const response =
-                await axios.post(
-                    "http://localhost:5000/api/documents",
-                    formData
-                );
-
-            setResult(
-                response.data
-            );
-
-        } catch (error) {
-
-            console.log(error);
-
-            alert(
-                "Upload Failed"
-            );
-
-        } finally {
-
-            setLoading(false);
-        }
+        return alert(
+            "Connect Wallet First"
+        );
     }
 
-    return (
+    try {
 
-        <div className="upload-page">
+        setLoading(true);
 
-            <div className="upload-box">
+        const formData =
+            new FormData();
 
-                <h2>
-                    AI Document Verification
-                </h2>
+        formData.append(
+            "file",
+            file
+        );
 
-                <input
-                    type="text"
-                    placeholder="Document Name"
-                    value={documentName}
-                    onChange={(e) =>
-                        setDocumentName(
-                            e.target.value
-                        )
-                    }
-                />
+        formData.append(
+            "documentName",
+            documentName
+        );
 
-                <select
-                    value={documentType}
-                    onChange={(e) =>
-                        setDocumentType(
-                            e.target.value
-                        )
-                    }
-                >
+        formData.append(
+            "documentType",
+            documentType
+        );
 
-                    <option>
-                        Bank Passbook
-                    </option>
+        formData.append(
+            "walletAddress",
+            walletAddress
+        );
 
-                    <option>
-                        Aadhaar Card
-                    </option>
+        const response =
+            await axios.post(
+                "http://localhost:5000/api/documents",
+                formData
+            );
 
-                    <option>
-                        PAN Card
-                    </option>
+        setResult(
+            response.data
+        );
 
-                    <option>
-                        Passport
-                    </option>
+    } catch (error) {
 
-                </select>
+        console.log(error);
 
-                <input
-                    type="file"
-                    onChange={(e) =>
-                        setFile(
-                            e.target.files[0]
-                        )
-                    }
-                />
+        alert(
+            "Upload Failed"
+        );
 
-                {file && (
+    } finally {
+
+        setLoading(false);
+    }
+}
+
+return (
+
+    <div className="upload-page">
+
+        <div className="upload-box">
+
+            <h2>
+                AI Document Verification
+            </h2>
+
+            <input
+                type="text"
+                placeholder="Document Name"
+                value={documentName}
+                onChange={(e) =>
+                    setDocumentName(
+                        e.target.value
+                    )
+                }
+            />
+
+            <select
+                value={documentType}
+                onChange={(e) =>
+                    setDocumentType(
+                        e.target.value
+                    )
+                }
+            >
+
+                <option>
+                    Bank Passbook
+                </option>
+
+                <option>
+                    Aadhaar Card
+                </option>
+
+                <option>
+                    PAN Card
+                </option>
+
+                <option>
+                    Passport
+                </option>
+
+            </select>
+
+            <input
+                type="file"
+                onChange={(e) =>
+                    setFile(
+                        e.target.files[0]
+                    )
+                }
+            />
+
+            {
+                file && (
 
                     <p>
                         Selected:
+                        {" "}
                         {file.name}
                     </p>
 
-                )}
+                )
+            }
 
-                <button
-                    onClick={
-                        handleUpload
-                    }
-                    disabled={loading}
-                >
+            <button
+                onClick={
+                    handleUpload
+                }
+                disabled={loading}
+            >
 
-                    {
-                        loading
-                            ? "Processing..."
-                            : "Upload & Verify"
-                    }
+                {
+                    loading
+                    ? "Processing..."
+                    : "Upload & Verify"
+                }
 
-                </button>
+            </button>
 
-            </div>
+        </div>
 
-            {result && (
+        {
+            result && (
 
                 <div className="result-box">
 
@@ -234,10 +255,13 @@ function Upload() {
 
                 </div>
 
-            )}
+            )
+        }
 
-        </div>
-    );
+    </div>
+);
+
+
 }
 
 export default Upload;
