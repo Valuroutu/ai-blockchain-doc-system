@@ -19,9 +19,7 @@ export const isAdmin = (
 
         return res.status(401)
         .json({
-
             success: false,
-
             message:
                 "Wallet address required"
         });
@@ -36,13 +34,15 @@ export const isAdmin = (
 
         return res.status(403)
         .json({
-
             success: false,
-
             message:
                 "Admin access only"
         });
     }
+
+    console.log(
+        "Admin access granted"
+    );
 
     next();
 };

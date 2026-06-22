@@ -9,7 +9,7 @@ function Admin() {
         useState([]);
 
     const adminWallet =
-        "YOUR_METAMASK_WALLET_ADDRESS";
+    import.meta.env.VITE_ADMIN_WALLET;
 
     const connectedWallet =
         localStorage.getItem(
@@ -28,6 +28,13 @@ function Admin() {
         }
 
     }, []);
+
+    console.log("Connected Wallet:", connectedWallet);
+console.log("Admin Wallet:", adminWallet);
+console.log(
+    connectedWallet?.toLowerCase() ===
+    adminWallet?.toLowerCase()
+);
 
     async function fetchDocuments() {
 

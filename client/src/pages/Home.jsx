@@ -16,6 +16,8 @@ function Home() {
                     Secure • Verified • Decentralized
                 </p>
 
+                
+
             </div>
 
             <div className="stats">
